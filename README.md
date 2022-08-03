@@ -6,14 +6,15 @@
 
 使用说明：
 
-1. 下载项目
+1 下载项目
 
-2. 下载预训练模型，https://huggingface.co/uer/gpt2-chinese-cluecorpussmall
+2 下载预训练模型，https://huggingface.co/uer/gpt2-chinese-cluecorpussmall
 
-3. 模型转换
-python scripts/convert_gpt2_from_huggingface_to_uer.py --input_model_path "D:/gpt2-chinese-cluecorpussmall/pytorch_model.bin" --output_model_path models/gpt2_pytorch_model.bin --layers_num 12
+3 模型转换
 
-4. 增量预训练
+    python scripts/convert_gpt2_from_huggingface_to_uer.py --input_model_path "D:/gpt2-chinese-cluecorpussmall/pytorch_model.bin" --output_model_path models/gpt2_pytorch_model.bin --layers_num 12
+
+4 增量预训练
 
     4.1 数据处理
     
@@ -29,15 +30,15 @@ python scripts/convert_gpt2_from_huggingface_to_uer.py --input_model_path "D:/gp
     
 5 模型训练
     
-    4.1 数据处理
+    5.1 数据处理
     
     python preprocess.py --corpus_path "/datasets/train-96.txt" --vocab_path models/google_zh_vocab.txt --dataset_path train-96.pt --seq_length 256 --target lm
     
-    4.2 模型训练
+    5.2 模型训练
     
     python pretrain.py --dataset_path train-96.pt --dataset_valid_path valid-32.pt --pretrained_model_path models/train-un-1024_gpt2_model.bin-10000 --vocab_path models/google_zh_vocab.txt --config_path models/gpt2/config.json --output_model_path models/train-un-96-gpt2_model.bin --world_size 1 --gpu_ranks 0 --total_steps 10000 --save_checkpoint_steps 5000 --report_steps 1000 --learning_rate 5e-5 --batch_size 32 --embedding word_pos --remove_embedding_layernorm --encoder transformer --mask causal --layernorm_positioning pre  --target lm --tie_weights
     
-    4.3 模型测试
+    5.3 模型测试
     
     python scripts/generate_lm_deepspeed.py --deepspeed --deepspeed_config models/deepspeed_config.json --load_model_path models/train-un-96-gpt2_model.bin-10000 --vocab_path models/google_zh_vocab.txt --test_path test-32.txt --prediction_path test-un-32-output.txt --config_path models/gpt2/config.json --seq_length 256 --embedding word_pos --remove_embedding_layernorm --encoder transformer --mask causal --layernorm_positioning pre --target lm --tie_weights
 
